@@ -1,7 +1,7 @@
 const scrollButtons = document.querySelectorAll("[data-scroll]");
 const revealElements = document.querySelectorAll("[data-reveal]");
 const progressBar = document.querySelector(".scroll-progress span");
-const langButtons = document.querySelectorAll(".lang-switch [data-lang]");
+const langSelect = document.querySelector("#lang-select");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const galleryButtons = document.querySelectorAll("[data-gallery]");
 const lightbox = document.querySelector(".lightbox");
@@ -728,19 +728,20 @@ const applyLanguage = (lang) => {
   });
 };
 
-langButtons.forEach((button) => {
-  const lang = button.dataset.lang;
-  if (!availableLanguages.includes(lang)) {
-    button.disabled = true;
-  }
-
-  button.addEventListener("click", () => {
-    if (!availableLanguages.includes(lang)) return;
-    langButtons.forEach((btn) => btn.classList.remove("active"));
-    button.classList.add("active");
-    applyLanguage(lang);
+if (langSelect) {
+  Array.from(langSelect.options).forEach((option) => {
+    if (!availableLanguages.includes(option.value)) {
+      option.disabled = true;
+    }
   });
-});
+
+  langSelect.addEventListener("change", () => {
+    const selected = langSelect.value;
+    if (availableLanguages.includes(selected)) {
+      applyLanguage(selected);
+    }
+  });
+}
 
 applyLanguage("en");
 
